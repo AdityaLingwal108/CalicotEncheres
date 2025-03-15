@@ -1,0 +1,24 @@
+name: Deploy Infrastructure (IaC)
+
+on:
+  workflow_dispatch:  # This allows manual triggering of the workflow
+
+jobs:
+  deploy-infra:
+    runs-on: ubuntu-latest  # The GitHub runner environment
+
+    steps:
+      - name: 🚀 Checkout Code
+        uses: actions/checkout@v3  # Check out the repository
+
+      - name: 🔑 Azure Login
+        uses: azure/login@v1  # Authenticate to Azure using the secret
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}  # Reference the secret we created
+
+      - name: 📦 Deploy Infrastructure using Bicep
+        run: |
+          az deployment group create \
+            --resource-group rg-calicot-dev \
+            --template-file main.bicep \
+            --parameters location="Canada Central"  # Use the location parameter

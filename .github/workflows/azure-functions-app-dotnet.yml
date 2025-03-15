@@ -16,9 +16,23 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}  # Reference the secret we created
 
-      - name: 📦 Deploy Infrastructure using Bicep
+      - name: 📦 Deploy Virtual Network (vnet.bicep)
         run: |
           az deployment group create \
             --resource-group rg-calicot-dev \
-            --template-file main.bicep \
+            --template-file COFOMOBicepFiles/vnet.bicep \
+            --parameters location="Canada Central"  # Use the location parameter
+
+      - name: 📦 Deploy Application Network (app.net.bicep)
+        run: |
+          az deployment group create \
+            --resource-group rg-calicot-dev \
+            --template-file COFOMOBicepFiles/app.net.bicep \
+            --parameters location="Canada Central"  # Use the location parameter
+
+      - name: 📦 Deploy Key Vault (keyvault.net.bicep)
+        run: |
+          az deployment group create \
+            --resource-group rg-calicot-dev \
+            --template-file COFOMOBicepFiles/keyvault.net.bicep \
             --parameters location="Canada Central"  # Use the location parameter
